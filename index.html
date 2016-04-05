@@ -1,0 +1,91 @@
+<body>
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script>
+window.onload = function(){
+	var canvas = document.getElementById('canvas');
+	var ctx = canvas.getContext('2d');
+	var radius = 20;
+	var marginTop = 100;
+	var range = 1000;
+	var numOfLeds = 10;
+	var element = document.querySelector('input[type = "range"]');
+    element.addEventListener("input",changeValue);
+	
+	//begins defining the Shape class and its prototype
+	var Shape = function(x,y,color){
+	  this.color = color;
+	  this.x = x;
+	  this.y = y;
+	};
+	
+	Shape.prototype.drawRectangle = function(){
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x,this.y,canvas.width,canvas.height);
+	}
+	
+	Shape.prototype.drawCircle = function(){
+      ctx.fillStyle = this.color;
+	  ctx.beginPath();
+      ctx.arc(this.x, this.y, radius, 0, 2 * Math.PI, false);
+	  ctx.fill();
+	}
+	//ends defining the Shape class and its prototype
+	
+	for (var j = 0; j < 11; j++){
+	  var led1  = new Shape(150,marginTop,"#FF4747");
+	  var led2  = new Shape(200,marginTop,"#444444");	
+	  var led3  = new Shape(250,marginTop,"#FF4747");
+      var led4  = new Shape(300,marginTop,"#444444");	
+	  var led5  = new Shape(350,marginTop,"#FF4747");
+	  var led6  = new Shape(400,marginTop,"#444444");
+	  var led7  = new Shape(450,marginTop,"#FF4747");
+	  var led8  = new Shape(500,marginTop,"#444444");
+	  var led9  = new Shape(550,marginTop,"#FF4747");
+	  var led10 = new Shape(600,marginTop,"#444444");
+	}
+	
+	function reDisplay(newValue){
+	  var value1 = range / numOfLeds;
+	  var iterateTimes = Math.round(newValue / value1);
+	  console.log("iterateTimes="+iterateTimes);
+	  ctx.clearRect(0,0,canvas.width,canvas.height);
+	  $('#text').text(iterateTimes).css({left:newValue/2.05+130+"px"});
+	  for (var i = 1; i <= iterateTimes; i++){
+	    var selectorStr = "led"+i;
+		var selector = eval(selectorStr);
+	    selector.drawCircle();
+	  };
+	;
+    }	
+	var newVal = 0.0; 
+	animateValue();
+	
+	function changeValue(){
+	  var newValue = element.value;
+	  reDisplay(newValue);
+	}
+	
+	
+	function animateValue(){
+	  
+	  if (newVal > 500){
+	    clearTimeout(loop);
+	  }
+	  else{
+      newVal = newVal + 3;
+	  console.log(newVal);
+      $('#range').val(newVal);
+	  changeValue();
+      var loop = setTimeout(animateValue,1);
+	  }
+	}
+	
+};
+</script>
+<div id="text">0</div>
+<canvas id = "canvas" width="1000px" height="160px"></canvas>
+<input id="range" type="range" min="0" max="1000" step="0.5" value="0">
+</div>
+</body>
